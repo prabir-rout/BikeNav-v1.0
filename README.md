@@ -1,5 +1,4 @@
 # BikeNav-v1.0
-Here is your **clean README description without emojis**, ready to use:
 
 ---
 
