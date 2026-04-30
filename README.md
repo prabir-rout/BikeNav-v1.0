@@ -1,4 +1,4 @@
-# BikeNav-v1.0
+# BikeNav-v1.0 (The Project is still IN PROGRESS)
 
 ---
 
