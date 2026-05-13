@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#121212">
+
+    <!-- Search Bar -->
+    <EditText
+        android:id="@+id/etDestination"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_margin="12dp"
+        android:hint="Search destination..."
+        android:textColor="#FFFFFF"
+        android:textColorHint="#888888"
+        android:background="#1E1E1E"
+        android:padding="16dp"/>
+
+    <!-- Mini Google Map -->
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"/>
+
+    <!-- Status Panel -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvBleStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ESP32: Disconnected"
+            android:textColor="#FF4444"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/tvGpsStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Navigation: Inactive"
+            android:textColor="#888888"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:id="@+id/tvEta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ETA: ---"
+            android:textColor="#CCCCCC"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp"/>
+    </LinearLayout>
+
+    <!-- OLED Preview -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:layout_margin="16dp"
+        android:orientation="vertical"
+        android:background="#000000"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="OLED PREVIEW"
+            android:textColor="#666666"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:id="@+id/tvLastInstruction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="NO NAVIGATION"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="20dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#FFFFFF"/>
+
+        <TextView
+            android:id="@+id/tvOledDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select destination to begin"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:layout_marginTop="20dp"/>
+    </LinearLayout>
+
+    <!-- Start Button -->
+    <Button
+        android:id="@+id/btnStartNav"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginHorizontal="16dp"
+        android:text="START NAVIGATION"
+        android:textSize="18sp"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#1DB954"/>
+
+</LinearLayout>
