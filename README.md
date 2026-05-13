@@ -606,9 +606,6 @@ Planned upgrades:
 
 # License
 
-Specify your preferred license.
-
-Example:
 
 MIT License
 
