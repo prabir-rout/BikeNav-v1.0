@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     companion object {
         private const val AUTOCOMPLETE_REQUEST_CODE = 1001
-        private const val GOOGLE_API_KEY = "AIzaSyCEYWcMVCWiOOiDQ4rNL00bBVEOvzr4chY"
+        private const val GOOGLE_API_KEY = "YOUR_API_KEY" //put your Maps API key here
 
         private const val ARRIVAL_THRESHOLD_METERS = 25.0
         private const val STEP_REACHED_THRESHOLD_METERS = 30.0
