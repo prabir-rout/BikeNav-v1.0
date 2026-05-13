@@ -621,7 +621,7 @@ MIT License
 
 # Author
 
-Prabir
+Prabir P Rout
 
 Computer Science Engineering (AI & ML)
 Embedded Systems Developer
