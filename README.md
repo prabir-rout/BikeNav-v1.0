@@ -6,6 +6,14 @@ The system consists of an Android mobile application and an ESP32-based embedded
 
 BikeNav is designed as a lightweight, modular navigation HUD for motorcycles and serves as the foundation for future upgrades such as TFT graphical interfaces, audio prompts, haptic alerts, and wearable integration.
 
+
+
+
+
+https://github.com/user-attachments/assets/31c9ed6d-7a9c-4308-89aa-063dcfa40730
+
+
+
 ---
 
 # Table of Contents
