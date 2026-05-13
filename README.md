@@ -1,104 +1,623 @@
-# BikeNav-v1.0 (The Project is still IN PROGRESS)
+# BikeNav
+
+BikeNav is a smart motorcycle navigation assistant designed to provide a safer and less distracting navigation experience for riders.
+
+The system consists of an Android mobile application and an ESP32-based embedded display unit. The Android application handles route generation, GPS tracking, rerouting logic, and navigation processing using Google Maps services, while the ESP32 receives navigation instructions over Bluetooth Low Energy (BLE) and displays them on an OLED screen in a rider-friendly format.
+
+BikeNav is designed as a lightweight, modular navigation HUD for motorcycles and serves as the foundation for future upgrades such as TFT graphical interfaces, audio prompts, haptic alerts, and wearable integration.
 
 ---
 
-# Bike Navigation Assistant
+# Table of Contents
 
-The Bike Navigation Assistant is a compact and smart embedded system designed to provide real-time navigation guidance to riders in a minimal and distraction-free way. It combines an ESP32 microcontroller, an OLED display, and a custom-built Android application to deliver turn-by-turn navigation directly from a smartphone to a handlebar-mounted device.
-
----
-
-## How It Works
-
-1. The user starts navigation on Google Maps.
-2. The Android app listens to navigation notifications in the background.
-3. It extracts key information such as:
-
-   * Direction (LEFT, RIGHT, STRAIGHT, U-TURN)
-   * Distance (e.g., 200m, 1.2km)
-4. The app formats the data into a simple structure:
-
-   ```
-   DIRECTION|DISTANCE|
-   ```
-5. This data is sent to the ESP32 via Bluetooth Low Energy (BLE).
-6. The ESP32 processes the data and displays it on the OLED screen.
-
----
-
-## Display Behavior
-
-### Navigation Active
-
-* Shows a bold directional arrow
-* Displays distance to the next turn
-* Clean and readable UI for riding
-
-### Navigation Inactive
-
-* Switches to an animated eye display
-* Provides a dynamic idle interface
+- Overview
+- Features
+- System Architecture
+- Hardware Requirements
+- Software Requirements
+- Project Structure
+- Installation and Setup
+  - Android Application Setup
+  - ESP32 Firmware Setup
+  - Google Cloud API Configuration
+- Usage Guide
+- Communication Protocol
+- OLED Display Interface
+- Navigation Workflow
+- Configuration Parameters
+- Troubleshooting
+- Future Roadmap
+- License
+- Author
 
 ---
 
-## Features
+# Overview
 
-* Real-time navigation updates
-* BLE communication (low power and stable)
-* Works with offline Google Maps navigation
-* Minimal and distraction-free UI
-* Idle animation for improved user experience
-* Low power consumption suitable for battery operation
+Traditional smartphone-based motorcycle navigation can be distracting and potentially unsafe because riders often need to shift visual attention toward a phone mounted on the handlebar.
 
----
+BikeNav addresses this problem by introducing a dedicated navigation display unit that shows only essential navigation information in a minimal format optimized for quick visual comprehension.
 
-## Hardware Used
+The Android application acts as the navigation engine and performs:
 
-* ESP32 Dev Board
-* 0.96" OLED Display (SSD1306, I2C)
-* Battery (2000–3000 mAh recommended)
+- destination search
+- route generation
+- live GPS tracking
+- step-by-step maneuver calculation
+- rerouting logic
+- BLE data transmission
 
----
+The ESP32 embedded unit acts as the display controller and performs:
 
-## Software and Tools
-
-* Arduino / PlatformIO (ESP32 programming)
-* Android Studio (mobile app development)
-* Libraries:
-
-  * Adafruit SSD1306
-  * Adafruit GFX
-  * NimBLE-Arduino
+- BLE packet reception
+- instruction parsing
+- OLED rendering
+- UI updates
+- connection management
 
 ---
 
-## System Architecture
+# Features
 
+## Android Application
+
+### Navigation
+- Real-time route generation using Google Directions API
+- Turn-by-turn navigation
+- Live GPS tracking
+- Automatic rerouting when off-route
+- Arrival detection
+
+### Maps Integration
+- Google Maps integration
+- Destination search
+- Google Places Autocomplete support
+- Route visualization
+- Current location tracking
+
+### BLE Communication
+- Automatic connection to ESP32
+- BLE data packet transmission
+- MTU optimization for larger payloads
+- Reconnection support
+
+### User Interface
+- Interactive map interface
+- Start/stop navigation control
+- Live OLED preview simulation
+- GPS status indicators
+- BLE connection status
+
+---
+
+## ESP32 Embedded Unit
+
+### Communication
+- Bluetooth Low Energy (BLE) server
+- Navigation packet receiver
+- Connection monitoring
+- Automatic advertising after disconnect
+
+### Display System
+- OLED HUD rendering
+- Large maneuver direction display
+- Large distance display
+- Smooth horizontal scrolling ticker for detailed instructions
+- Welcome screen
+
+### UI Design
+Optimized for motorcycle riding:
+- minimal distraction
+- large glanceable information
+- smooth readable scrolling
+- simplified navigation HUD
+
+---
+
+# System Architecture
+
+```text
++-------------------------------------------------------------+
+|                        Android Smartphone                   |
+|-------------------------------------------------------------|
+|                                                             |
+|  Google Maps SDK                                            |
+|  Google Directions API                                      |
+|  Google Places API                                          |
+|                                                             |
+|  Navigation Engine                                          |
+|   - GPS Tracking                                            |
+|   - Route Processing                                        |
+|   - Maneuver Detection                                      |
+|   - Rerouting Logic                                         |
+|                                                             |
+|  BLE Client                                                 |
+|                                                             |
++---------------------------|---------------------------------+
+                            |
+                            | Bluetooth Low Energy
+                            |
++---------------------------v---------------------------------+
+|                          ESP32 Unit                         |
+|-------------------------------------------------------------|
+|                                                             |
+|  BLE Server                                                 |
+|                                                             |
+|  Packet Parser                                              |
+|                                                             |
+|  OLED UI Renderer                                           |
+|   - Direction                                                |
+|   - Distance                                                 |
+|   - Scrolling Instruction Ticker                             |
+|                                                             |
++---------------------------|---------------------------------+
+                            |
+                            |
++---------------------------v---------------------------------+
+|                      OLED Display (128x64)                 |
++-------------------------------------------------------------+
 ```
-Google Maps → Notification → Android App → BLE → ESP32 → OLED Display
+
+---
+
+# Hardware Requirements
+
+Required components:
+
+- ESP32 DevKit V1
+- SSD1306 OLED Display (128x64, I2C)
+- Push Button (optional)
+- USB cable for ESP32 programming
+- Android smartphone
+- Power bank or regulated power source
+
+Optional future hardware:
+
+- Round TFT display
+- vibration motor
+- speaker module
+- battery management module
+- helmet intercom module
+
+---
+
+# Software Requirements
+
+## Android Side
+
+- Android Studio
+- Kotlin
+- Android SDK
+- Google Play Services
+- Google Maps SDK
+- Google Places SDK
+
+Minimum Android version:
+- Android 8.0+
+
+---
+
+## Embedded Side
+
+- Visual Studio Code
+- PlatformIO
+- ESP32 platform package
+- Arduino framework
+
+Required libraries:
+
+- NimBLE-Arduino
+- Adafruit SSD1306
+- Adafruit GFX
+- Wire
+
+---
+
+# Project Structure
+
+```text
+BikeNav/
+│
+├── AndroidApp/
+│   ├── app/
+│   ├── gradle/
+│   └── Android project files
+│
+├── ESP32_Firmware/
+│   ├── src/
+│   │   └── main.cpp
+│   ├── platformio.ini
+│   └── library dependencies
+│
+└── README.md
 ```
 
 ---
 
-## Data Format
+# Installation and Setup
 
-The system uses a simple and robust data format:
+# Android Application Setup
 
-```
-RIGHT|200m|
-LEFT|1.2km|
-STRAIGHT|--|
+## 1. Clone repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/BikeNav.git
 ```
 
 ---
 
-## Power System
+## 2. Open Android project
 
-* Recommended battery: 2000–3000 mAh
-* Expected runtime: 10–15 hours (OLED setup)
+Open:
+
+```text
+BikeNav/AndroidApp
+```
+
+in Android Studio.
 
 ---
 
-## Goal
+## 3. Sync Gradle
 
-The goal of this project is to create a lightweight, efficient, and rider-friendly navigation system that avoids the complexity of traditional navigation setups while maintaining usability and reliability.
+Allow Android Studio to sync all dependencies.
+
+---
+
+# Google Cloud API Configuration
+
+Create a Google Cloud project and enable:
+
+- Maps SDK for Android
+- Directions API
+- Places API
+
+Create an API key.
+
+Add your API key in:
+
+```text
+AndroidManifest.xml
+```
+
+Example:
+
+```xml
+<meta-data
+    android:name="com.google.android.geo.API_KEY"
+    android:value="YOUR_API_KEY"/>
+```
+
+---
+
+# BLE MAC Address Configuration
+
+Update the ESP32 BLE MAC address inside:
+
+```text
+BleService.kt
+```
+
+Find:
+
+```kotlin
+private val ESP32_MAC = "XX:XX:XX:XX:XX:XX"
+```
+
+Replace with your actual ESP32 MAC address.
+
+---
+
+# ESP32 Firmware Setup
+
+## 1. Open firmware project
+
+Open:
+
+```text
+BikeNav/ESP32_Firmware
+```
+
+in Visual Studio Code with PlatformIO.
+
+---
+
+## 2. Install libraries
+
+Ensure:
+
+- NimBLE-Arduino
+- Adafruit SSD1306
+- Adafruit GFX
+
+are installed.
+
+---
+
+## 3. Wire OLED
+
+Example wiring:
+
+| OLED | ESP32 |
+|------|-------|
+| VCC  | 3.3V  |
+| GND  | GND   |
+| SDA  | GPIO 21 |
+| SCL  | GPIO 22 |
+
+Adjust pins in code if required.
+
+---
+
+## 4. Build and Upload
+
+```bash
+pio run --target upload
+```
+
+---
+
+# Usage Guide
+
+## Step 1: Power ESP32
+
+Power the ESP32.
+
+It will:
+
+- initialize BLE
+- initialize OLED
+- begin advertising
+
+---
+
+## Step 2: Launch Android App
+
+Open BikeNav app.
+
+The app will:
+
+- initialize BLE service
+- connect to ESP32
+- request larger MTU
+- establish communication
+
+---
+
+## Step 3: Verify Connection
+
+Expected:
+
+ESP32 serial monitor:
+
+```text
+Phone Connected
+```
+
+Android app:
+
+- BLE connected status shown
+
+---
+
+## Step 4: Search Destination
+
+Use the destination search bar.
+
+Google Places autocomplete will suggest destinations.
+
+Select a destination.
+
+---
+
+## Step 5: Start Navigation
+
+Press:
+
+```text
+START NAVIGATION
+```
+
+The app will:
+
+- fetch route
+- process steps
+- begin GPS tracking
+- send instructions to ESP32
+
+---
+
+## Step 6: Ride
+
+OLED display shows:
+
+Top:
+- maneuver direction
+- distance to next turn
+
+Bottom:
+- scrolling detailed instruction
+
+Example:
+
+```text
+STRAIGHT
+195 m
+--------------------------------
+Head north toward Roxy Rd
+```
+
+---
+
+## Step 7: Off-route Handling
+
+If rider deviates:
+
+- off-route detection triggers
+- cooldown prevents excessive API calls
+- new route fetched
+- navigation resumes
+
+---
+
+# Communication Protocol
+
+BLE packet format:
+
+```text
+DIRECTION|DISTANCE FULL_INSTRUCTION
+```
+
+Example:
+
+```text
+LEFT|195 m Turn left onto NH16
+```
+
+Parsing:
+
+Direction:
+```text
+LEFT
+```
+
+Distance:
+```text
+195 m
+```
+
+Instruction:
+```text
+Turn left onto NH16
+```
+
+---
+
+# OLED Display Interface
+
+Layout:
+
+```text
++----------------------------------+
+|                                  |
+|            STRAIGHT              |
+|                                  |
+|             195 m                |
+|----------------------------------|
+| Head north toward Roxy Rd        |
++----------------------------------+
+```
+
+Design principles:
+
+- high readability
+- low distraction
+- minimal information overload
+- fast visual comprehension
+
+---
+
+# Configuration Parameters
+
+Example tunable values:
+
+Navigation thresholds:
+- arrival distance threshold
+- step reached threshold
+- off-route threshold
+- reroute cooldown
+
+BLE:
+- MTU size
+- reconnect delay
+
+Display:
+- marquee speed
+- font size
+- divider position
+
+---
+
+# Troubleshooting
+
+## BLE not connecting
+
+Check:
+- correct ESP32 MAC address
+- BLE enabled on phone
+- ESP32 powered on
+
+---
+
+## OLED blank
+
+Check:
+- I2C wiring
+- OLED address
+- power supply
+
+---
+
+## Google Maps not loading
+
+Check:
+- valid API key
+- enabled Maps SDK
+- billing configuration
+
+---
+
+## Destination search not working
+
+Check:
+- Places API enabled
+- API restrictions
+- internet connection
+
+---
+
+## Frequent rerouting
+
+Adjust:
+- off-route threshold
+- reroute cooldown
+
+---
+
+# Future Roadmap
+
+Planned upgrades:
+
+- graphical turn arrows
+- round TFT display
+- audio prompts
+- helmet intercom integration
+- vibration alerts
+- ETA display
+- battery monitoring
+- speedometer
+- offline cached navigation
+- day/night themes
+- weather awareness
+- ride analytics
+- wearable integration
+
+---
+
+# License
+
+Specify your preferred license.
+
+Example:
+
+MIT License
+
+---
+
+# Author
+
+Prabir
+
+Computer Science Engineering (AI & ML)
+Embedded Systems Developer
+IoT | AI | Robotics | Product Development
